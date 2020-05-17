@@ -1,7 +1,7 @@
 function submitWithConfiguration(conf)
   addpath('./lib/jsonlab');
 
-  parts = parts(conf);
+  partsfun = parts(conf);
 
   fprintf('== Submitting solutions | %s...\n', conf.itemName);
 
@@ -19,7 +19,7 @@ function submitWithConfiguration(conf)
   end
 
   try
-    response = submitParts(conf, email, token, parts);
+    response = submitParts(conf, email, token, partsfun);
   catch
     e = lasterror();
     fprintf('\n!! Submission failed: %s\n', e.message);
@@ -34,7 +34,7 @@ function submitWithConfiguration(conf)
   elseif isfield(response, 'errorCode')
     fprintf('!! Submission failed: %s\n', response.message);
   else
-    showFeedback(parts, response);
+    showFeedback(partsfun, response);
     save(tokenFile, 'email', 'token');
   end
 end
@@ -61,27 +61,28 @@ function isValid = isValidPartOptionIndex(partOptions, i)
   isValid = (~isempty(i)) && (1 <= i) && (i <= numel(partOptions));
 end
 
-function response = submitParts(conf, email, token, parts)
-  body = makePostBody(conf, email, token, parts);
-  submissionUrl = submissionUrl();
+function response = submitParts(conf, email, token, partsfun)
+  body = makePostBody(conf, email, token, partsfun);
+  %submissionUrl = submissionUrl(); %riju
+  submissionUrl = 'https://www-origin.coursera.org/api/onDemandProgrammingImmediateFormSubmissions.v1';
 
   responseBody = getResponse(submissionUrl, body);
   jsonResponse = validateResponse(responseBody);
   response = loadjson(jsonResponse);
 end
 
-function body = makePostBody(conf, email, token, parts)
+function body = makePostBody(conf, email, token, partsfun)
   bodyStruct.assignmentSlug = conf.assignmentSlug;
   bodyStruct.submitterEmail = email;
   bodyStruct.secret = token;
-  bodyStruct.parts = makePartsStruct(conf, parts);
+  bodyStruct.parts = makePartsStruct(conf, partsfun);
 
   opt.Compact = 1;
   body = savejson('', bodyStruct, opt);
 end
 
-function partsStruct = makePartsStruct(conf, parts)
-  for part = parts
+function partsStruct = makePartsStruct(conf, partsfun)
+  for part = partsfun
     partId = part{:}.id;
     fieldName = makeValidFieldName(partId);
     outputStruct.output = conf.output(partId);
@@ -99,11 +100,11 @@ function [parts] = parts(conf)
   end
 end
 
-function showFeedback(parts, response)
+function showFeedback(partsfun, response)
   fprintf('== \n');
   fprintf('== %43s | %9s | %-s\n', 'Part Name', 'Score', 'Feedback');
   fprintf('== %43s | %9s | %-s\n', '---------', '-----', '--------');
-  for part = parts
+  for part = partsfun
     score = '';
     partFeedback = '';
     partFeedback = response.partFeedbacks.(makeValidFieldName(part{:}.id));
@@ -174,6 +175,6 @@ end
 % Service configuration
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function submissionUrl = submissionUrl()
-  submissionUrl = 'https://www-origin.coursera.org/api/onDemandProgrammingImmediateFormSubmissions.v1';
-end
+%function submissionUrl = submissionUrl()
+  %submissionUrl = 'https://www-origin.coursera.org/api/onDemandProgrammingImmediateFormSubmissions.v1';
+%end
