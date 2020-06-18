@@ -1,0 +1,223 @@
+This is optional material that you can read after the week 2 video "Gradient descent on m examples." You don't need to know calculus in order to complete this course (or the other courses in the specialization), so this derivation is optional. This is for those who are curious about where the "dz = a - y" comes from.
+
+This can be more fun and easier to digest if you follow along with a pencil and paper!
+
+Derivation of \frac{dL}{dz} 
+dz
+dL
+​	
+ 
+
+If you're curious, here is the derivation for \frac{dL}{dz} = a - y 
+dz
+dL
+​	
+ =a−y
+
+Note that in this part of the course, Andrew refers to \frac{dL}{dz} 
+dz
+dL
+​	
+  as dzdz.
+
+By the chain rule: \frac{dL}{dz} = \frac{dL}{da} \times \frac{da}{dz} 
+dz
+dL
+​	
+ = 
+da
+dL
+​	
+ × 
+dz
+da
+​	
+ 
+
+We'll do the following: 1. solve for \frac{dL}{da} 
+da
+dL
+​	
+ , then
+
+Step 1: \frac{dL}{da} 
+da
+dL
+​	
+ 
+
+L = -(y \times log(a) + (1-y) \times log(1-a))L=−(y×log(a)+(1−y)×log(1−a))
+
+\frac{dL}{da} = -y\times \frac{1}{a} - (1-y) \times \frac{1}{1-a}\times -1 
+da
+dL
+​	
+ =−y× 
+a
+1
+​	
+ −(1−y)× 
+1−a
+1
+​	
+ ×−1
+
+We're taking the derivative with respect to a.
+
+Remember that there is an additional -1−1 in the last term when we take the derivative of (1-a)(1−a) with respect to aa (remember the Chain Rule).
+
+\frac{dL}{da} = \frac{-y}{a} + \frac{1-y}{1-a} 
+da
+dL
+​	
+ = 
+a
+−y
+​	
+ + 
+1−a
+1−y
+​	
+ 
+
+We'll give both terms the same denominator:
+
+\frac{dL}{da} = \frac{-y \times (1-a)}{a\times(1-a)} + \frac{a \times (1-y)}{a\times(1-a)} 
+da
+dL
+​	
+ = 
+a×(1−a)
+−y×(1−a)
+​	
+ + 
+a×(1−a)
+a×(1−y)
+​	
+ 
+
+Clean up the terms:
+
+\frac{dL}{da} = \frac{-y + ay + a - ay}{a(1-a)} 
+da
+dL
+​	
+ = 
+a(1−a)
+−y+ay+a−ay
+​	
+ 
+
+So now we have:
+
+\frac{dL}{da} = \frac{a - y}{a(1-a)} 
+da
+dL
+​	
+ = 
+a(1−a)
+a−y
+​	
+ 
+
+Step 2: \frac{da}{dz} 
+dz
+da
+​	
+ 
+
+\frac{da}{dz} = \frac{d}{dz} \sigma(z) 
+dz
+da
+​	
+ = 
+dz
+d
+​	
+ σ(z)
+
+The derivative of a sigmoid has the form:
+
+\frac{d}{dz}\sigma(z) = \sigma(z) \times (1 - \sigma(z)) 
+dz
+d
+​	
+ σ(z)=σ(z)×(1−σ(z))
+
+You can look up why this derivation is of this form. For example, google "derivative of a sigmoid", and you can see the derivation in detail.
+
+Recall that \sigma(z) = aσ(z)=a, because we defined "a", the activation, as the output of the sigmoid activation function.
+
+So we can substitute into the formula to get:
+
+\frac{da}{dz} = a (1 - a) 
+dz
+da
+​	
+ =a(1−a)
+
+Step 3: \frac{dL}{dz} 
+dz
+dL
+​	
+ 
+
+We'll multiply step 1 and step 2 to get the result.
+
+\frac{dL}{dz} = \frac{dL}{da} \times \frac{da}{dz} 
+dz
+dL
+​	
+ = 
+da
+dL
+​	
+ × 
+dz
+da
+​	
+ 
+
+From step 1: \frac{dL}{da} = \frac{a - y}{a(1-a)} 
+da
+dL
+​	
+ = 
+a(1−a)
+a−y
+​	
+ 
+
+From step 2: \frac{da}{dz} = a (1 - a) 
+dz
+da
+​	
+ =a(1−a)
+
+\frac{dL}{dz} = \frac{a - y}{a(1-a)} \times a (1 - a) 
+dz
+dL
+​	
+ = 
+a(1−a)
+a−y
+​	
+ ×a(1−a)
+
+Notice that we can cancel factors to get this:
+
+\frac{dL}{dz} = a - y 
+dz
+dL
+​	
+ =a−y
+
+In Andrew's notation, he's referring to \frac{dL}{dz} 
+dz
+dL
+​	
+  as dzdz.
+
+So in the videos:
+
+dz = a - ydz=a−y
